@@ -104,18 +104,16 @@ readBtn.addEventListener('click', function (e) {
 });
 
 // Delete Book Event Listener
-removeBtns.forEach(removeBtn => {
+document.addEventListener('click', (e) => {
     const bookContainer = document.querySelector('.books');
-    removeBtn.addEventListener('click', function (e) {
+    if (e.target.classList.contains('remove')) {
         removeBookFromLibrary(e.target.getAttribute('data-id'));
         bookContainer.innerHTML = "";
         displayLibrary(myLibrary);
-        console.table(myLibrary);
-        removeBtns = document.querySelectorAll('.remove');
+        // console.table(myLibrary);
+    }
+})
 
-    });
-
-});
 
 
 
