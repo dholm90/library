@@ -45,6 +45,7 @@ function displayLibrary(library) {
 
         // Add classes to elements
         remove.classList.add('remove');
+        read.classList.add('readBook');
 
         // DOM Text Content
         title.textContent = book.title;
@@ -106,11 +107,15 @@ readBtn.addEventListener('click', function (e) {
 // Delete Book Event Listener
 document.addEventListener('click', (e) => {
     const bookContainer = document.querySelector('.books');
+
     if (e.target.classList.contains('remove')) {
         removeBookFromLibrary(e.target.getAttribute('data-id'));
         bookContainer.innerHTML = "";
         displayLibrary(myLibrary);
         // console.table(myLibrary);
+    }
+    else if (e.target.classList.contains('readBook')) {
+        console.log(e)
     }
 })
 
