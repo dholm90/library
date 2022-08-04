@@ -4,7 +4,7 @@ function Book(title, author, pages, read) {
     this.title = title;
     this.author = author;
     this.pages = pages;
-    this.read = new Boolean(read);
+    this.read = read;
 
     this.info = function () {
         return title + author + pages + read;
@@ -23,18 +23,26 @@ addBookToLibrary(theHobbit2);
 
 function displayLibrary(library) {
     library.forEach(book => {
+
+        // DOM Element initialize
         const bookContainer = document.querySelector('.books');
         const bookCard = document.createElement('div');
         const title = document.createElement('p');
         const author = document.createElement('p');
         const pages = document.createElement('p');
-        const read = document.createElement('p');
+        const read = document.createElement('button');
 
+        // DOM Text Content
         title.textContent = book.title;
         author.textContent = book.author;
         pages.textContent = book.pages;
-        read.textContent = book.read;
 
+        if (book.read == "true")
+            read.textContent = "Read"
+        else
+            read.textContent = "Not Read"
+
+        // Append DOM elements
         bookCard.appendChild(title);
         bookCard.appendChild(author);
         bookCard.appendChild(pages);
@@ -42,22 +50,39 @@ function displayLibrary(library) {
         bookContainer.appendChild(bookCard);
     });
 }
+
 displayLibrary(myLibrary);
 
-const btn = document.querySelector('#add-book');
+// Button Event Listener selectors
+const addBookBtn = document.querySelector('#add-book');
+const readBtn = document.querySelector('#read-btn');
 
-btn.addEventListener('click', function (e) {
+// Add Book button event listener
+addBookBtn.addEventListener('click', function (e) {
     const bookContainer = document.querySelector('.books');
-
     const title = document.getElementById('title').value;
     const author = document.getElementById('author').value;
     const pages = document.getElementById('pages').value;
-    const read = document.getElementById('read').value;
+    const read = document.getElementById('read-btn').value;
     const newBook = new Book(title, author, pages, read);
     if (title && author && pages) {
         bookContainer.innerHTML = "";
         addBookToLibrary(newBook);
         displayLibrary(myLibrary);
+    }
+});
+
+// Read book btn event listener
+readBtn.addEventListener('click', function (e) {
+    const read = document.getElementById('read-btn');
+    const readValue = document.getElementById('read-btn').value;
+    if (readValue !== "true") {
+        this.value = "true";
+        this.textContent = "Read"
+    }
+    else {
+        this.value = "false";
+        this.textContent = "Not Read"
     }
 
 });
