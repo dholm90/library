@@ -15,6 +15,10 @@ function addBookToLibrary(newBook) {
     myLibrary.push(newBook);
 }
 
+function removeBookFromLibrary(deleteBook) {
+    myLibrary.splice(deleteBook, 1);
+}
+
 const theHobbit = new Book('the hobbit', 'jrr', '295', true);
 const theHobbit2 = new Book('the hobbit2', 'jrr', '295', false);
 
@@ -22,6 +26,7 @@ addBookToLibrary(theHobbit);
 addBookToLibrary(theHobbit2);
 
 function displayLibrary(library) {
+    let counter = 0;
     library.forEach(book => {
 
         // DOM Element initialize
@@ -31,11 +36,21 @@ function displayLibrary(library) {
         const author = document.createElement('p');
         const pages = document.createElement('p');
         const read = document.createElement('button');
+        const remove = document.createElement('button');
+
+        // Counter for data-id
+
+        remove.setAttribute('data-id', counter);
+        counter += 1;
+
+        // Add classes to elements
+        remove.classList.add('remove');
 
         // DOM Text Content
         title.textContent = book.title;
         author.textContent = book.author;
         pages.textContent = book.pages;
+        remove.textContent = "Delete";
 
         if (book.read == "true")
             read.textContent = "Read"
@@ -47,6 +62,7 @@ function displayLibrary(library) {
         bookCard.appendChild(author);
         bookCard.appendChild(pages);
         bookCard.appendChild(read);
+        bookCard.appendChild(remove);
         bookContainer.appendChild(bookCard);
     });
 }
@@ -56,6 +72,7 @@ displayLibrary(myLibrary);
 // Button Event Listener selectors
 const addBookBtn = document.querySelector('#add-book');
 const readBtn = document.querySelector('#read-btn');
+let removeBtns = document.querySelectorAll('.remove');
 
 // Add Book button event listener
 addBookBtn.addEventListener('click', function (e) {
@@ -72,7 +89,7 @@ addBookBtn.addEventListener('click', function (e) {
     }
 });
 
-// Read book btn event listener
+// Read book event listener
 readBtn.addEventListener('click', function (e) {
     const read = document.getElementById('read-btn');
     const readValue = document.getElementById('read-btn').value;
@@ -84,8 +101,22 @@ readBtn.addEventListener('click', function (e) {
         this.value = "false";
         this.textContent = "Not Read"
     }
+});
+
+// Delete Book Event Listener
+removeBtns.forEach(removeBtn => {
+    const bookContainer = document.querySelector('.books');
+    removeBtn.addEventListener('click', function (e) {
+        removeBookFromLibrary(e.target.getAttribute('data-id'));
+        bookContainer.innerHTML = "";
+        displayLibrary(myLibrary);
+        console.table(myLibrary);
+        removeBtns = document.querySelectorAll('.remove');
+
+    });
 
 });
+
 
 
 
