@@ -19,6 +19,20 @@ function removeBookFromLibrary(deleteBook) {
     myLibrary.splice(deleteBook, 1);
 }
 
+function toggleRead(target) {
+    const readValue = target.getAttribute('value');
+    if (readValue !== "true") {
+        target.setAttribute('value', 'true');
+        target.textContent = "Read"
+        // this.textContent = "Read"
+    }
+    else {
+        target.setAttribute('value', 'false')
+        target.textContent = "Not Read"
+    }
+
+}
+
 const theHobbit = new Book('the hobbit', 'jrr', '295', true);
 const theHobbit2 = new Book('the hobbit2', 'jrr', '295', false);
 
@@ -39,13 +53,15 @@ function displayLibrary(library) {
         const remove = document.createElement('button');
 
         // Counter for data-id
-
         remove.setAttribute('data-id', counter);
+        read.setAttribute('data-id', counter)
         counter += 1;
 
         // Add classes to elements
         remove.classList.add('remove');
         read.classList.add('readBook');
+
+        read.value = book.read;
 
         // DOM Text Content
         title.textContent = book.title;
@@ -53,7 +69,7 @@ function displayLibrary(library) {
         pages.textContent = book.pages;
         remove.textContent = "Delete";
 
-        if (book.read == "true")
+        if (read.value == "true")
             read.textContent = "Read"
         else
             read.textContent = "Not Read"
@@ -70,52 +86,39 @@ function displayLibrary(library) {
 
 displayLibrary(myLibrary);
 
-// Button Event Listener selectors
-const addBookBtn = document.querySelector('#add-book');
-const readBtn = document.querySelector('#read-btn');
-let removeBtns = document.querySelectorAll('.remove');
 
-// Add Book button event listener
-addBookBtn.addEventListener('click', function (e) {
+// Button Event Listeners
+document.addEventListener('click', (e) => {
+    // Form selectors
     const bookContainer = document.querySelector('.books');
     const title = document.getElementById('title').value;
     const author = document.getElementById('author').value;
     const pages = document.getElementById('pages').value;
-    const read = document.getElementById('read-btn').value;
-    const newBook = new Book(title, author, pages, read);
-    if (title && author && pages) {
-        bookContainer.innerHTML = "";
-        addBookToLibrary(newBook);
-        displayLibrary(myLibrary);
-    }
-});
+    const read = document.querySelector('.read-btn').value;
 
-// Read book event listener
-readBtn.addEventListener('click', function (e) {
-    const read = document.getElementById('read-btn');
-    const readValue = document.getElementById('read-btn').value;
-    if (readValue !== "true") {
-        this.value = "true";
-        this.textContent = "Read"
-    }
-    else {
-        this.value = "false";
-        this.textContent = "Not Read"
-    }
-});
-
-// Delete Book Event Listener
-document.addEventListener('click', (e) => {
-    const bookContainer = document.querySelector('.books');
-
+    // Event listener for remove buttons
     if (e.target.classList.contains('remove')) {
         removeBookFromLibrary(e.target.getAttribute('data-id'));
         bookContainer.innerHTML = "";
         displayLibrary(myLibrary);
         // console.table(myLibrary);
     }
+    // Event listener for read / not read buttons
     else if (e.target.classList.contains('readBook')) {
-        console.log(e)
+        toggleRead(e.target);
+    }
+    // Event Listener for read / not read input
+    else if (e.target.classList.contains('read-btn')) {
+        toggleRead(e.target);
+    }
+
+    else if (e.target.classList.contains('add-book')) {
+        const newBook = new Book(title, author, pages, read);
+        if (title && author && pages) {
+            bookContainer.innerHTML = "";
+            addBookToLibrary(newBook);
+            displayLibrary(myLibrary);
+        }
     }
 })
 
