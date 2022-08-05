@@ -1,6 +1,7 @@
 let myLibrary = [];
 
-function Book(title, author, pages, read) {
+function Book(id, title, author, pages, read) {
+    this.id = id;
     this.title = title;
     this.author = author;
     this.pages = pages;
@@ -19,32 +20,57 @@ function removeBookFromLibrary(deleteBook) {
     myLibrary.splice(deleteBook, 1);
 }
 
+
+
 function toggleRead(target) {
+
+    const dataID = parseInt(target.getAttribute('data-id'));
     const readValue = target.getAttribute('value');
-    // const dataID = target.getAttribute('data-id');
+
+
+    const newLibrary = myLibrary.map(object => {
+        if (object.id === parseInt(dataID)) {
+            return { ...object, read: readValue };
+
+        }
+        return object;
+    })
+    // myLibrary = newLibrary.slice(0);
+    // console.table(newLibrary);
+    // myLibrary.splice(0, myLibrary.length, ...newLibrary);
+    // myLibrary = newLibrary;
+
+
     // const index = myLibrary.map(book => book.read).indexOf(dataID);
     // console.log(index);
-
+    console.log(readValue)
     if (readValue !== "true") {
+
         target.setAttribute('value', 'true');
         target.textContent = "Read";
         target.classList.remove('notRead');
-        // myLibrary.forEach(book => {
-        //     if (book.indexOf(index)) {
-        //         console.log(index)
-        //     }
-        // })
+        // console.table(newLibrary)
+        // myLibrary = newLibrary.slice(0);
+
+
+
     }
     else {
         target.setAttribute('value', 'false')
         target.textContent = "Not Read";
-        target.classList.add("notRead")
+        target.classList.add("notRead");
+        // console.table(newLibrary)
+        // myLibrary = newLibrary.slice(0);
+        // myLibrary.splice(0, myLibrary.length, ...newLibrary);
     }
+    console.table(myLibrary);
+
+    console.table(newLibrary);
 
 }
 
-const theHobbit = new Book('the hobbit', 'jrr', '295', true);
-const theHobbit2 = new Book('the hobbit2', 'jrr', '295', false);
+const theHobbit = new Book(0, 'the hobbit', 'jrr', '295', true);
+const theHobbit2 = new Book(1, 'the hobbit2', 'jrr', '295', false);
 
 addBookToLibrary(theHobbit);
 addBookToLibrary(theHobbit2);
@@ -64,7 +90,8 @@ function displayLibrary(library) {
 
         // Counter for data-id
         remove.setAttribute('data-id', counter);
-        read.setAttribute('data-id', counter)
+        read.setAttribute('data-id', counter);
+        book.id = counter;
         counter += 1;
 
         // Add classes to elements
@@ -129,7 +156,9 @@ document.addEventListener('click', (e) => {
     }
     // Event Listener for read / not read input
     else if (e.target.classList.contains('read-btn')) {
+        bookContainer.innerHTML = "";
         toggleRead(e.target);
+        displayLibrary(myLibrary);
     }
 
     else if (e.target.classList.contains('add-book')) {
