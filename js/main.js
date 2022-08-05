@@ -21,14 +21,24 @@ function removeBookFromLibrary(deleteBook) {
 
 function toggleRead(target) {
     const readValue = target.getAttribute('value');
+    // const dataID = target.getAttribute('data-id');
+    // const index = myLibrary.map(book => book.read).indexOf(dataID);
+    // console.log(index);
+
     if (readValue !== "true") {
         target.setAttribute('value', 'true');
-        target.textContent = "Read"
-        // this.textContent = "Read"
+        target.textContent = "Read";
+        target.classList.remove('notRead');
+        // myLibrary.forEach(book => {
+        //     if (book.indexOf(index)) {
+        //         console.log(index)
+        //     }
+        // })
     }
     else {
         target.setAttribute('value', 'false')
-        target.textContent = "Not Read"
+        target.textContent = "Not Read";
+        target.classList.add("notRead")
     }
 
 }
@@ -60,7 +70,9 @@ function displayLibrary(library) {
         // Add classes to elements
         remove.classList.add('remove');
         read.classList.add('readBook');
+        bookCard.classList.add('book');
 
+        // Set read value to book object read value
         read.value = book.read;
 
         // DOM Text Content
@@ -69,10 +81,18 @@ function displayLibrary(library) {
         pages.textContent = book.pages;
         remove.textContent = "Delete";
 
-        if (read.value == "true")
+        if (read.value == "true") {
             read.textContent = "Read"
-        else
+            book.read = read.value;
+        }
+
+        else {
             read.textContent = "Not Read"
+            read.classList.add('notRead');
+            book.read = read.value;
+
+        }
+
 
         // Append DOM elements
         bookCard.appendChild(title);
@@ -113,7 +133,8 @@ document.addEventListener('click', (e) => {
     }
 
     else if (e.target.classList.contains('add-book')) {
-        const newBook = new Book(title, author, pages, read);
+        let id = 0;
+        const newBook = new Book(id, title, author, pages, read);
         if (title && author && pages) {
             bookContainer.innerHTML = "";
             addBookToLibrary(newBook);
