@@ -123,13 +123,6 @@ class displayController {
                     isRead.value = 'false';
                 }
                 console.log(isRead.value)
-                // this.render();
-
-
-
-                // bookContainer.innerHTML = "";
-                // toggleRead(e.target);
-                // displayLibrary(myLibrary);
             }
 
             else if (e.target.classList.contains('add-book')) {
@@ -138,8 +131,7 @@ class displayController {
                 const pages = document.getElementById('pages').value;
                 const isRead = document.getElementById('read-btn').value;
                 if (title && author && pages)
-                    library.addBook(title, author, pages, isRead)
-
+                    library.addBook(new Book(title, author, pages, isRead))
             }
         })
     }
@@ -149,13 +141,10 @@ class Library {
     constructor() {
         this.books = [];
         this.display = new displayController();
-
     }
-
     addBook(newBook) {
         this.books.push(newBook);
         this.display.render();
-
     }
     removeBook(index) {
         this.books.splice(index, 1);
@@ -164,7 +153,6 @@ class Library {
     getBook(index) {
         return this.books[index];
     }
-
     setIsRead(index) {
         let read = this.books[index].isRead;
         read = !read;
@@ -172,9 +160,6 @@ class Library {
         this.display.render();
     }
 }
-
-
-
 class Book {
     constructor(title, author, pages, isRead) {
         this.title = title;
