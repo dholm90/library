@@ -1,6 +1,19 @@
+class counter {
+    constructor() {
+        this.count = 0;
+    }
+    add() {
+        return this.count++;
+    }
+    reset() {
+        return this.count = 0;
+    }
+}
+
 class displayController {
     constructor() {
-
+        this.counter = new counter();
+        this.book = new Book();
     }
 
     createBook(book) {
@@ -12,6 +25,11 @@ class displayController {
         const pages = document.createElement('p');
         const read = document.createElement('button');
         const remove = document.createElement('button');
+
+        // Counter logic
+        remove.setAttribute('data-id', this.counter.count);
+        read.setAttribute('data-id', this.counter.count);
+        this.counter.add();
 
         // Add classes to elements
         remove.classList.add('remove');
@@ -29,6 +47,7 @@ class displayController {
         // Set read or not read
         if (read.value == "true") {
             read.textContent = "Read"
+
         }
 
         else {
@@ -48,11 +67,14 @@ class displayController {
     render() {
         const bookContainer = document.querySelector('.books');
         const books = document.querySelectorAll('.book');
+        let isRead = document.querySelector('.read-btn');
         books.forEach(book => bookContainer.removeChild(book));
 
         for (let i = 0; i < library.books.length; i++) {
             this.createBook(library.books[i]);
         }
+
+        this.counter.reset();
 
     }
 
@@ -60,7 +82,7 @@ class displayController {
         const title = document.getElementById('title').value;
         const author = document.getElementById('author').value;
         const pages = document.getElementById('pages').value;
-        const isRead = document.getElementById('read-btn').checked;
+        const isRead = document.getElementById('read-btn').value;
         return new Book(title, author, pages, isRead);
     }
 
@@ -73,35 +95,51 @@ class displayController {
             const pages = document.getElementById('pages').value;
             const read = document.querySelector('.read-btn').value;
 
+
             // Event listener for remove buttons
             if (e.target.classList.contains('remove')) {
-
-
-                // removeBookFromLibrary(e.target.getAttribute('data-id'));
-                // bookContainer.innerHTML = "";
-                // displayLibrary(myLibrary);
-                // // console.table(myLibrary);
-                console.log(e.target)
+                library.removeBook(e.target.getAttribute('data-id'));
             }
             // Event listener for read / not read buttons
             else if (e.target.classList.contains('readBook')) {
-                // toggleRead(e.target);
+                library.setIsRead(e.target.getAttribute('data-id'));
             }
             // Event Listener for read / not read input
             else if (e.target.classList.contains('read-btn')) {
+
+                let isRead = document.getElementById('read-btn');
+                console.log(isRead.value);
+
+                document.getElementById('read-btn').value = isRead.value;
+                if (isRead.value != 'true') {
+                    isRead.textContent = "Read"
+                    isRead.classList.remove('notRead');
+                    isRead.value = 'true';
+                }
+
+                else {
+                    isRead.textContent = "Not Read"
+                    isRead.classList.add('notRead');
+                    isRead.value = 'false';
+                }
+                console.log(isRead.value)
+                // this.render();
+
+
+
                 // bookContainer.innerHTML = "";
                 // toggleRead(e.target);
                 // displayLibrary(myLibrary);
             }
 
             else if (e.target.classList.contains('add-book')) {
-                // let id = 0;
-                //     const newBook = new Book(title, author, pages, read);
-                //     if (title && author && pages) {
-                //         bookContainer.innerHTML = "";
-                //         addBookToLibrary(newBook);
-                //         displayLibrary(myLibrary);
-                //     }
+                const title = document.getElementById('title').value;
+                const author = document.getElementById('author').value;
+                const pages = document.getElementById('pages').value;
+                const isRead = document.getElementById('read-btn').value;
+                if (title && author && pages)
+                    library.addBook(title, author, pages, isRead)
+
             }
         })
     }
@@ -144,6 +182,8 @@ class Book {
         this.pages = pages;
         this.isRead = isRead;
     }
+
+
 }
 
 const library = new Library();
@@ -152,6 +192,6 @@ let book2 = new Book('book2', 'adf', 325, false);
 library.addBook(book1);
 library.addBook(book2);
 library.display.events();
-// let display = new displayController();
+
 
 
